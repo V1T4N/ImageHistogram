@@ -2,20 +2,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 
-#img = cv2.imread('test.jpg')
+import os, tkinter, tkinter.filedialog, tkinter.messagebox
+
+root = tkinter.Tk()
+root.withdraw()
 
 
 
 
 
 cap = cv2.VideoCapture(0)
-cap.set(10, 30) #set brightness
+cap.set(10, 5) #set brightness
 
 
 while True:
 
     i = 0
-    while (i<10):
+    while (i<15):
 
         try:
             # VideoCaptureから1フレーム読み込む
@@ -35,11 +38,11 @@ while True:
         except KeyboardInterrupt:
             break
 
-    txt = input("Exit -> press 1 key and Enter \nContinue -> press other key and Enter\n")
+    con = tkinter.messagebox.askokcancel('message','continue?')
+    #txt = input("Exit -> press 1 key and Enter \nContinue -> press other key and Enter\n")
 
-    if(txt == "1"):
+    if(con == False):
         exit()
-    else:
-        continue
+    
 cap.release()
 cv2.destroyAllWindows()
