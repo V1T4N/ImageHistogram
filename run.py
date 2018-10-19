@@ -29,11 +29,23 @@ while True:
             
 
             n,bins,patches = plt.hist(d,bins = 254, range=(1, 254))
+            
+            av = np.mean(d)
+            sigma = np.std(d)
+            size = np.size(d)
+            var = np.var(d)
 
-            plt.plot([5,5],[0,n.max()])
-            plt.plot([250,250],[0,n.max()])
+            
+            #print(av - ((2.262*var)/np.sqrt(size)),av + (2.262*var)/np.sqrt(size))
 
-            print(n[5],n[250])
+            v_95min = av - ((1.960*var)/np.sqrt(size))
+            v_95max = av + (1.960*var)/np.sqrt(size)
+
+            plt.plot([v_95min,v_95min],[0,n.max()])
+            plt.plot([v_95max,v_95max],[0,n.max()])
+
+            #print(n[5],n[250])
+            
             plt.pause(0.001)
             plt.cla()
             
