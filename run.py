@@ -7,11 +7,11 @@ import os, tkinter, tkinter.filedialog, tkinter.messagebox
 root = tkinter.Tk()
 root.withdraw()
 
+CamNum = input("Enter Camera number(default:0)\n")
 
 
 
-
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(int(CamNum))
 cap.set(10, 5) #set brightness
 
 
@@ -28,7 +28,7 @@ while True:
             d = gray.flatten()
             
 
-            n,bins,patches = plt.hist(d,bins = 254, range=(1, 254), normed=False)
+            n,bins,patches = plt.hist(d,bins = 254, range=(1, 254))
 
             plt.plot([5,5],[0,n.max()])
             plt.plot([250,250],[0,n.max()])

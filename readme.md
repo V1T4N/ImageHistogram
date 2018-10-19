@@ -1,6 +1,7 @@
 # Image Histogram
 
-Plot brightness histogram of WebCam image.
+Plot brightness histogram of WebCam image.<br>
+This program ask you whether exit or continue each 15 frame.
 
 ## requirement 
 Python3
