@@ -46,8 +46,6 @@ root.mainloop()
 
 cap = cv2.VideoCapture(int(CamNum))
 
-cap.set(10, 5) #set brightness
-
 
 while True:
 
@@ -69,7 +67,7 @@ while True:
            
             
 
-            n,bins,patches = plt.hist(d,bins = 256, range=(0, 255))
+            n,bins,patches = plt.hist(d,bins = 258, range=(-1, 256))
             size = np.size(d)
             v_5 = size*0.05
 
