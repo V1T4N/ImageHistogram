@@ -4,63 +4,123 @@ import cv2
 
 import os, tkinter, tkinter.filedialog, tkinter.messagebox
 
-root = tkinter.Tk()
-root.withdraw()
 
-CamNum = input("Enter Camera number(default:0)\n")
+#global CamNum = 0
+
+
+root = tkinter.Tk()
+root.geometry('150x100')
+txt = tkinter.Entry(width = 2)
+txt.place(x=30, y=43)
+txt.insert(tkinter.END,"0")
+
+txt2 = tkinter.Entry(width = 3)
+txt2.place(x=30, y=5)
+txt2.insert(tkinter.END,"1.0")
+
+lbl = tkinter.Label(text='Movie Scale')
+lbl.place(x=60, y=5)
+
+
+lbl2 = tkinter.Label(text='Camera Number')
+lbl2.place(x=50, y=43)
+
+
+
+def button1_clicked():
+    global CamNum
+    global Scale
+    CamNum = txt.get()
+    Scale = txt2.get()
+    Scale = float(Scale)
+    root.destroy()
+
+button1 = tkinter.Button(root, text='Enter', command=button1_clicked)
+button1.place(x=30, y=60)
+
+root.mainloop()
+
+
 
 
 
 cap = cv2.VideoCapture(int(CamNum))
+
 cap.set(10, 5) #set brightness
 
 
 while True:
 
-    i = 0
-    while (i<15):
+    r = 0
+    while (r < 15):
 
         try:
             # VideoCaptureから1フレーム読み込む
             ret, frame = cap.read()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             
+            
+            
+            height = gray.shape[0]
+            width =gray.shape[1]
+            gray = cv2.resize(gray,(int(width/Scale),int(height/Scale)))
+           
             d = gray.flatten()
+           
             
 
-            n,bins,patches = plt.hist(d,bins = 254, range=(1, 254))
-            
-            av = np.mean(d)
-            sigma = np.std(d)
+            n,bins,patches = plt.hist(d,bins = 256, range=(0, 255))
             size = np.size(d)
-            var = np.var(d)
+            v_5 = size*0.05
 
+            i = 0
+            j = 255
+            sum = 0
+            sum2 = 0
+
+            v_5_pole = 0
+            v_95_pole = 0
+
+            while(True):
+                if(sum > v_5):
+                    v_5_pole = i
+                    break
+                sum = sum + n[i]
+                i = i + 1
+
+
+            while(True):
+                if(sum2 > v_5):
+                    v_95_pole = j
+                    break
+                sum2 = sum2 + n[j]
+                j = j - 1
             
-            #print(av - ((2.262*var)/np.sqrt(size)),av + (2.262*var)/np.sqrt(size))
+            print("5% = ",v_5_pole, "95% = ", v_95_pole)
 
-            v_95min = av - ((1.960*var)/np.sqrt(size))
-            v_95max = av + (1.960*var)/np.sqrt(size)
-
-            plt.plot([v_95min,v_95min],[0,n.max()])
-            plt.plot([v_95max,v_95max],[0,n.max()])
-
-            #print(n[5],n[250])
+            plt.plot([v_5_pole,v_5_pole],[0,n.max()])
+            plt.plot([v_95_pole,v_95_pole],[0,n.max()])
             
-            plt.pause(0.001)
+           
+            
+            plt.pause(0.0001)
             plt.cla()
             
             cv2.imshow("raw",gray)
             
-            i = i +1
+            r = r + 1
 
-        except KeyboardInterrupt:
-            break
 
-    con = tkinter.messagebox.askokcancel('message','continue?')
-    #txt = input("Exit -> press 1 key and Enter \nContinue -> press other key and Enter\n")
+        except:
+            err = tkinter.messagebox.showerror('error','cannot connect')
+            if(err == 'ok'):
+                exit()
 
-    if(con == False):
+   
+
+    con = tkinter.messagebox.askquestion('message','continue?')
+    if(con == 'no'):
         exit()
-    
+       
 cap.release()
 cv2.destroyAllWindows()
